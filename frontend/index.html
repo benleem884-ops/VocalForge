@@ -1,48 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>VocalForge Login</title>
-    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VocalForge</title>
+
+    <!-- TailwindCSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Optional: Add a favicon -->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/727/727245.png" />
   </head>
-  <body>
-    <h1>Welcome to VocalForge 🎙️</h1>
-    <button id="login">Login / Sign Up</button>
-    <button id="logout" style="display:none;">Logout</button>
-    <p id="status">Not logged in</p>
 
-    <script>
-      const auth0 = await createAuth0Client({
-        domain: "dev-n2b7nwou3yhxye7h.uk.auth0.com",
-        client_id: "n3ELIzuQ9pGNCeXNKulX7H6OUssAtt9I",
-      });
+  <body class="bg-gray-50 text-gray-900 flex flex-col items-center min-h-screen font-sans">
+    <header class="w-full bg-white shadow-sm p-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-indigo-600">🎙️ VocalForge</h1>
+      <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+        Login / Sign Up
+      </button>
+    </header>
 
-      async function updateUI() {
-        const isAuthenticated = await auth0.isAuthenticated();
-        document.getElementById("login").style.display = isAuthenticated ? "none" : "block";
-        document.getElementById("logout").style.display = isAuthenticated ? "block" : "none";
-        document.getElementById("status").textContent = isAuthenticated
-          ? "✅ You’re logged in!"
-          : "Not logged in";
-      }
+    <main class="flex flex-col items-center justify-center flex-1 text-center p-6">
+      <h2 class="text-4xl font-bold mb-4">Create, Clone & Dub with AI Voices</h2>
+      <p class="text-lg text-gray-600 max-w-2xl mb-8">
+        Generate ultra-realistic speech, clone voices, and dub videos instantly in 32+ languages. 
+        The next generation of audio creation — powered by AI.
+      </p>
+      <a
+        href="#"
+        class="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow hover:bg-indigo-700 transition"
+      >
+        Try it free
+      </a>
+    </main>
 
-      document.getElementById("login").addEventListener("click", async () => {
-        await auth0.loginWithRedirect({
-          authorizationParams: {
-            redirect_uri: window.location.origin,
-          },
-        });
-      });
-
-      document.getElementById("logout").addEventListener("click", () => {
-        auth0.logout({
-          logoutParams: { returnTo: window.location.origin },
-        });
-      });
-
-      window.onload = async () => {
-        await auth0.handleRedirectCallback().catch(() => {});
-        await updateUI();
-      };
-    </script>
+    <footer class="p-4 text-gray-500 text-sm">
+      © 2025 VocalForge — Built with ❤️ for creators.
+    </footer>
   </body>
 </html>
