@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VocalForge</title>
+  </head>
+  <body>
+    <h1>Welcome to VocalForge 🎙️</h1>
+    <p>Your AI voice studio is coming soon!</p>
+  </body>
+</html>
