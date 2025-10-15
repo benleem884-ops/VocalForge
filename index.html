@@ -13,75 +13,79 @@
   </head>
 
   <body class="bg-gray-50 text-gray-900 flex flex-col items-center min-h-screen font-sans">
-    <header class="w-full bg-white shadow-sm p-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-indigo-600">🎙️ VocalForge</h1>
-      <button id="login-btn" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-        Login / Sign Up
-      </button>
-      <button id="logout-btn" class="hidden bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
-        Log Out
-      </button>
-    </header>
+  <header class="w-full bg-white shadow-sm p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-indigo-600">🎙️ VocalForge</h1>
+    <button id="login-btn" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+      Login / Sign Up
+    </button>
+    <button id="logout-btn" class="hidden bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
+      Log Out
+    </button>
+  </header>
 
-    <main class="flex flex-col items-center justify-center flex-1 text-center p-6">
-      <h2 class="text-4xl font-bold mb-4">Create, Clone & Dub with AI Voices</h2>
-      <p class="text-lg text-gray-600 max-w-2xl mb-8">
-        Generate ultra-realistic speech, clone voices, and dub videos instantly in 32+ languages.
-      </p>
-      <a href="#" class="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow hover:bg-indigo-700 transition">
-        Try it free
-      </a>
-    </main>
+  <main class="flex flex-col items-center justify-center flex-1 text-center p-6">
+    <h2 class="text-4xl font-bold mb-4">Create, Clone & Dub with AI Voices</h2>
+    <p class="text-lg text-gray-600 max-w-2xl mb-8">
+      Generate ultra-realistic speech, clone voices, and dub videos instantly in 32+ languages.
+    </p>
+    <a href="#" class="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow hover:bg-indigo-700 transition">
+      Try it free
+    </a>
+  </main>
 
-    <footer class="p-4 text-gray-500 text-sm">
-      © 2025 VocalForge — Built with ❤️ for creators.
-    </footer>
+  <footer class="p-4 text-gray-500 text-sm">
+    © 2025 VocalForge — Built with ❤️ for creators.
+  </footer>
 
-    <!-- ✅ Your own code goes here -->
-    <script>
-      const auth0Domain = "dev-n2b7nwou3yhxye7h.uk.auth0.com"; // example: dev-abc123.us.auth0.com
-      const auth0ClientId = "n3ELIzuQ9pGNCeXNKulX7H6OUssAtt9I"; // example: JgkO2xkBf12AbCDEf
+  <!-- Auth0 + App Script -->
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.4/auth0-spa-js.production.js"></script>
+  <script>
+    const auth0Domain = "dev-n2b7nwou3yhxye7h.uk.auth0.com";
+    const auth0ClientId = "n3ELIzuQ9pGNCeXNKulX7H6OUssAtt9I";
 
-      let auth0Client;
+    let auth0Client;
 
-      async function initAuth0() {
-        auth0Client = await createAuth0Client({
-          domain: auth0Domain,
-          client_id: auth0ClientId,
-          cacheLocation: "localstorage",
-        });
+    async function initAuth0() {
+      auth0Client = await createAuth0Client({
+        domain: auth0Domain,
+        client_id: auth0ClientId,
+        cacheLocation: "localstorage",
+        authorizationParams: {
+          redirect_uri: window.location.origin + "/VocalForge",
+        },
+      });
 
-        const isAuthenticated = await auth0Client.isAuthenticated();
+      const isAuthenticated = await auth0Client.isAuthenticated();
 
-        if (isAuthenticated) {
-          document.getElementById("login-btn").classList.add("hidden");
-          document.getElementById("logout-btn").classList.remove("hidden");
-        }
-
-        const query = window.location.search;
-        if (query.includes("code=") && query.includes("state=")) {
-          await auth0Client.handleRedirectCallback();
-          window.history.replaceState({}, document.title, "/");
-        }
+      if (isAuthenticated) {
+        document.getElementById("login-btn").classList.add("hidden");
+        document.getElementById("logout-btn").classList.remove("hidden");
       }
 
-      document.getElementById("login-btn").addEventListener("click", async () => {
-        await auth0Client.loginWithRedirect({
-          authorizationParams: {
-            redirect_uri: window.location.origin + window.location.pathname,
-          },
-        });
-      });
+      const query = window.location.search;
+      if (query.includes("code=") && query.includes("state=")) {
+        await auth0Client.handleRedirectCallback();
+        window.history.replaceState({}, document.title, "/VocalForge");
+      }
+    }
 
-      document.getElementById("logout-btn").addEventListener("click", async () => {
-        await auth0Client.logout({
-          logoutParams: {
-            returnTo: window.location.origin + window.location.pathname,
-          },
-        });
+    document.getElementById("login-btn").addEventListener("click", async () => {
+      await auth0Client.loginWithRedirect({
+        authorizationParams: {
+          redirect_uri: window.location.origin + "/VocalForge",
+        },
       });
+    });
 
-      window.onload = initAuth0;
-    </script>
-  </body>
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+      await auth0Client.logout({
+        logoutParams: {
+          returnTo: window.location.origin + "/VocalForge",
+        },
+      });
+    });
+
+    window.onload = initAuth0;
+  </script>
+</body>
 </html>
