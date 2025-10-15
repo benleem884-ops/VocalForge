@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VocalForge Login</title>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+  </head>
+  <body>
+    <h1>Welcome to VocalForge 🎙️</h1>
+    <button id="login">Login / Sign Up</button>
+    <button id="logout" style="display:none;">Logout</button>
+    <p id="status">Not logged in</p>
+
+    <script>
+      const auth0 = await createAuth0Client({
+        domain: "dev-n2b7nwou3yhxye7h.uk.auth0.com",
+        client_id: "n3ELIzuQ9pGNCeXNKulX7H6OUssAtt9I",
+      });
+
+      async function updateUI() {
+        const isAuthenticated = await auth0.isAuthenticated();
+        document.getElementById("login").style.display = isAuthenticated ? "none" : "block";
+        document.getElementById("logout").style.display = isAuthenticated ? "block" : "none";
+        document.getElementById("status").textContent = isAuthenticated
+          ? "✅ You’re logged in!"
+          : "Not logged in";
+      }
+
+      document.getElementById("login").addEventListener("click", async () => {
+        await auth0.loginWithRedirect({
+          authorizationParams: {
+            redirect_uri: window.location.origin,
+          },
+        });
+      });
+
+      document.getElementById("logout").addEventListener("click", () => {
+        auth0.logout({
+          logoutParams: { returnTo: window.location.origin },
+        });
+      });
+
+      window.onload = async () => {
+        await auth0.handleRedirectCallback().catch(() => {});
+        await updateUI();
+      };
+    </script>
+  </body>
+</html>
